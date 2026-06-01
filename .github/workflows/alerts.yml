@@ -1,0 +1,40 @@
+name: Liquidity Sweep Alerts
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer les dependances
+        run: pip install yfinance requests
+
+      - name: Lancer la detection des sweeps
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: python liquidity_alerts.py
+
+      - name: Sauvegarder l'etat
+        run: |
+          if [ -n "$(git status --porcelain sweep_state.json)" ]; then
+            git config user.name "github-actions"
+            git config user.email "actions@github.com"
+            git add sweep_state.json
+            git commit -m "maj etat sweeps"
+            git push
+          fi

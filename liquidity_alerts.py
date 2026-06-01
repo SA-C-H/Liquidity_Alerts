@@ -51,7 +51,7 @@ PRICE_DIFF_THRESHOLD = 10.0   # seuil "déplacement significatif" pour la note
 
 STATE_FILE = "sweep_state.json"
 
-TG_TOKEN = os.environ.get("8994383299:AAHq20MRly2EEfGwLnKZs62Fm5Rgpa9f4Bk", "")
+TG_TOKEN = os.environ.get("TG_BOT_TOKEN", "")
 TG_CHAT  = os.environ.get("1878865956", "")
 
 # minutes par bougie, pour la notation basée sur le temps
